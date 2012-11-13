@@ -97,9 +97,6 @@
             <webqemmailcall>
                 <class>Webqem_Mailcall_Model</class>
             </webqemmailcall>
-            <!--<webqemwantitnowtwilight>
-                <class>Webqem_WantItNowTwilight_Model</class>
-            </webqemwantitnowtwilight>-->
 			<salesrule>
 				<rewrite>
 					<validator>Webqem_Mailcall_Model_SalesRule_Validator</validator>
