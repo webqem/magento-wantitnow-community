@@ -8,117 +8,49 @@
  */
 
 jQuery(function(){
-    var baseUrl                     = top.location.href.split('index.php');
-    var baseMediaUrl                = baseUrl[0]+"media/wantitnow/";
-    var serviceTypes                = "wantitnow,wantitnow_twilight".split(',');
-    var serviceCount                = serviceTypes.length;
-    var serviceTypesTitles          = "Want It Now, Want It Now Twilight".split(',');
-    var xmlNodePrefix               = "carriers_webqemmailcall,carriers_webqemwantitnowtwilight".split(',');
-    var displaySelectLogoElements   = (xmlNodePrefix[0]+'_display_logos,'+xmlNodePrefix[1]+'_display_logos').split(',');
-    var useFixedCostElements       = (xmlNodePrefix[0]+'_usefixedcost,'+xmlNodePrefix[1]+'_usefixedcost').split(',');
-
-    /*
-     * DISPLAY LOGOS
-     */
-
-    function changeLogoImg(logoName, logoContainer, logoTitle){
-
-        var logoImg = '<img src="'+baseMediaUrl+logoName+'.png" alt="'+logoTitle+'">';
-        logoContainer.html(logoImg);
+    var baseUrl=top.location.href.split('index.php');
+    var baseMediaUrl=baseUrl[0]+"media/wantitnow/";
+    var displayLogosSelect=jQuery('#carriers_webqemmailcall_display_logos');
+    displayLogosSelect.after('<p id="mailcall_logo_overview"></p>');
+    
+    var logoOverview=jQuery('#mailcall_logo_overview');
+    function changeLogoImg(){
+        var logoImg='<img src="'+baseMediaUrl+displayLogosSelect.val()+'.png" alt="Want it now">';
+        logoOverview.html(logoImg);
+        //jQuery('#carriers_webqemmailcall_title').val(logoImg+' <span style="display:none;">Mail Call</span>');
     }
-    // Create listener for logo change:
-    var displayLogoSelectList = "";
-    for(var x=0; x<serviceCount; x++) {
-        var strPrefix = ",";
-        if( x == 0 ) { strPrefix = ""; }
-        displayLogoSelectList = displayLogoSelectList+strPrefix+'#'+displaySelectLogoElements[x];
-    }
-
-    jQuery(displayLogoSelectList).change(function(){
-        var displayLogoSelectId = jQuery(this).attr('id');
-        var elIndex = displaySelectLogoElements.indexOf(displayLogoSelectId);
-        changeLogoImg(jQuery(this).val(), jQuery('#'+serviceTypes[elIndex]+'_logo_overview'), serviceTypesTitles[elIndex]);
+    
+    changeLogoImg();
+    displayLogosSelect.change(function(){
+        changeLogoImg();
+    });
+    
+    var usefixedcost=jQuery('#carriers_webqemmailcall_usefixedcost');
+    usefixedcost.change(function(){
+        changeFixedFields();
     });
 
-    //Display logos in the context of the service being displayed:
-    for(var x=0; x<serviceCount; x++){
-        var displayLogoId = serviceTypes[x]+"_logo_overview";
-        var displayLogoSelectId = "#"+displaySelectLogoElements[x];
-        // Create container to hold logo:
-        jQuery(displayLogoSelectId).after('<p id="'+displayLogoId+'"></p>');
-        // Initialise Logo:
-        jQuery(displayLogoSelectId).change();
-    }
-
-    // Want It Now:
-    //var displayLogosSelect_win=jQuery('#carriers_webqemmailcall_display_logos');
-    //var displayLogoId_win = "wantitnow_logo_overview";
-    //displayLogosSelect_win.after('<p id="'+displayLogoId_win+'"></p>');
-    //var logoOverview_win=jQuery('#'+displayLogoId_win);
-
-    // Want It Now Twilight:
-    //var displayLogosSelect_twilight=jQuery('#carriers_webqemwantitnowtwilight_wintwilightdisplay_logos');
-    //var displayLogoId_twilight = "wantitnow_twilight_logo_overview";
-    //displayLogosSelect_twilight.after('<p id="'+displayLogoId_twilight+'"></p>');;
-    //var logoOverview_twilight=jQuery('#'+displayLogoId_twilight);
-
-    // Initialise Logos:
-    //changeLogoImg('win');
-    //changeLogoImg('twilight');
-
-    // Create listeners for logos:
-    //displayLogosSelect_win.change(function(){
-    //    changeLogoImg('win');
-    //});
-    //displayLogosSelect_twilight.change(function(){
-    //    changeLogoImg('twilight');
-    //});
-
-    /*
-     * FIXED COST DYNAMIC FIELDS
-     */
-
-    function changeFixedFields(el){
-        var fieldId             = el.attr('id');
-        var elIndex             = useFixedCostElements.indexOf(fieldId);
-        var selectedVal         = el.val();
-        var selectedDisabled    = el.attr('disabled');
-        if( selectedVal == 0 ){
-            jQuery('#'+xmlNodePrefix[elIndex]+'_withinkms').attr('disabled',true);
-            jQuery('#'+xmlNodePrefix[elIndex]+'_fixedcost').attr('disabled',true);
-            jQuery('#'+xmlNodePrefix[elIndex]+'_display_wantitnow').attr('disabled',true);
-        } else {
+    function changeFixedFields(){
+        var selectedVal=usefixedcost.find("option:selected").val();
+        var selectedDisabled=usefixedcost.attr('disabled');
+        if(selectedVal==0){
+            jQuery('#carriers_webqemmailcall_withinkms').attr('disabled',true);
+            jQuery('#carriers_webqemmailcall_fixedcost').attr('disabled',true);
+            jQuery('#carriers_webqemmailcall_display_wantitnow').attr('disabled',true);
+        }else{
             if(!selectedDisabled){
-                jQuery('#'+xmlNodePrefix[elIndex]+'_withinkms').attr('disabled',false);
-                jQuery('#'+xmlNodePrefix[elIndex]+'_fixedcost').attr('disabled',false);
-                jQuery('#'+xmlNodePrefix[elIndex]+'_display_wantitnow').attr('disabled',false);
+                jQuery('#carriers_webqemmailcall_withinkms').attr('disabled',false);
+                jQuery('#carriers_webqemmailcall_fixedcost').attr('disabled',false);
+                jQuery('#carriers_webqemmailcall_display_wantitnow').attr('disabled',false);
             }
-
+            
         }
     }
-    // Create listener for fixed cost field change:
-    var useFixedCostList = "";
-    for(var x=0; x<serviceCount; x++) {
-        var strPrefix = ",";
-        if( x == 0 ) { strPrefix = ""; }
-        useFixedCostList = useFixedCostList+strPrefix+'#'+useFixedCostElements[x];
-    }
-    jQuery(useFixedCostList).change(function(){
-        changeFixedFields(jQuery(this));
-    });
-    // Initialise fields
-    for(var x=0; x<serviceCount; x++)   {
-        jQuery('#'+useFixedCostElements[x]).change();
-    }
-
-    /*
-     * READY TIME DYNAMIC FIELDS
-     */
+    changeFixedFields();
     
     var mailcallTable=jQuery('#carriers_webqemmailcall');
     var checkReadyTime=jQuery('#carriers_webqemmailcall_check_readytime');
     var readyTime=mailcallTable.find("[type='time']");
-    //console.log(jQuery('#row_carriers_webqemmailcall_readytime select'));
     readyTime.eq(2).find('option').remove();
     jQuery('<option value="00">00</option>').appendTo(readyTime.eq(2));
 
@@ -155,9 +87,9 @@ jQuery(function(){
             }
         }
     });
-
-    //function changeReadytime(){}
-
+    function changeReadytime(){
+        
+    }
 //    var flatRate=jQuery('#carriers_flatrate_active');
 //    var mailcallFlatrate=jQuery('#carriers_webqemmailcall_flatrate');
 //    

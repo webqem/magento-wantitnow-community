@@ -194,23 +194,10 @@
                 <fixedcost>0</fixedcost>
                 <display_wantitnow>1</display_wantitnow>
                 <debug>0</debug>
-                <specificerrmsg>There was an error when connecting to the Want It Now server. Please call Support for Bookings and Enquiries: 136 331.</specificerrmsg>
+                <specificerrmsg>There was an error when connecting to the MailCall (Want It Now) server. Please call MailCall IT Department for Bookings and Enquiries: 136 331.</specificerrmsg>
                 <model>webqemmailcall/Carrier_Mailcall</model>
                 <sort_order>0</sort_order>
             </webqemmailcall>
-            <webqemwantitnowtwilight>
-                <title>Want It Now Twilight</title>
-                <allowed_products>0</allowed_products>
-                <contentdesc></contentdesc>
-                <usefixedcost>0</usefixedcost>
-                <withinkms>0</withinkms>
-                <fixedcost>0</fixedcost>
-                <display_wantitnowtwilight>1</display_wantitnowtwilight>
-                <debug>0</debug>
-                <specificerrmsg>There was an error when connecting to the Want It Now Twilight server. Please call Support for Bookings and Enquiries: 136 331.</specificerrmsg>
-                <model>webqemwantitnowtwilight/Carrier_WantItNowTwilight</model>
-                <sort_order>0</sort_order>
-            </webqemwantitnowtwilight>
         </carriers>
     </default>
 </config>
