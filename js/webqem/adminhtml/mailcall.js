@@ -29,7 +29,7 @@ jQuery(function(){
     });
     
     //timeslots
-    var displayLogosSelectTimeslotes 	= jQuery('#carriers_webqemmailcall_timeslot_display_logos');
+    var displayLogosSelectTimeslotes 	= jQuery('#carriers_timeslot_display_logos');
     displayLogosSelectTimeslotes.after('<p id="timeslotes_logo_overview"></p>');
     var logoOverviewTimeslots = jQuery('#timeslotes_logo_overview');
     function changeLogoImgTimeslots(){
