@@ -689,9 +689,7 @@ class Webqem_Mailcall_Model_Carrier_Mailcall extends Mage_Shipping_Model_Carrier
     protected function getCheckout(){
             return Mage::getSingleton('checkout/session');
     }
-    public function bookXmlShippingRequest($quote) {
-    	
-    }
+    
     public function bookXmlRequest($quote) {
         $order=$this->getOrder();
         $address=$order->getShippingAddress();

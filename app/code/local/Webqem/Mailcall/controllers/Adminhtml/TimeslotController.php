@@ -25,9 +25,13 @@ class Webqem_Mailcall_Adminhtml_TimeslotController extends Mage_Adminhtml_Contro
 			if (!empty($data)) {
 				$model->setData($data);
 			}
-
-			Mage::register('gift_data', $model);
-
+			
+			Mage::register('timeslot_data', $model);
+			if ($id) {
+				$collectionTimeslot = Mage::getModel('webqemmailcall/timeslot')->getCollection();
+				$collectionTimeslot->getSelect()->where('number_day = '.$model->getNumberDay());
+				Mage::register('timeslot_edit_data', $collectionTimeslot);
+			}
 			$this->loadLayout();
 			$this->_setActiveMenu('webqemmailcall/items');
 
@@ -41,7 +45,7 @@ class Webqem_Mailcall_Adminhtml_TimeslotController extends Mage_Adminhtml_Contro
 
 			$this->renderLayout();
 		} else {
-			Mage::getSingleton('adminhtml/session')->addError(Mage::helper('gift')->__('Item does not exist'));
+			Mage::getSingleton('adminhtml/session')->addError(Mage::helper('webqemmailcall')->__('Item does not exist'));
 			$this->_redirect('*/*/');
 		}
 	}
@@ -55,16 +59,31 @@ class Webqem_Mailcall_Adminhtml_TimeslotController extends Mage_Adminhtml_Contro
 	  			
 			$timeslotDay = $data['timeslot_day'];
 			$segments 	 = $data['segment'];
+			$deleteids   = explode(',', trim($data['delete_ids'], ','));
 			
-			foreach ($segments as $segment) {
+			if ($segments==null) {
+				Mage::getSingleton('adminhtml/session')->addError(Mage::helper('webqemmailcall')->__('Unable to find timeslot to save'));
+				$this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
+				return;
+			}
+			
+			foreach ($segments as $id=>$segment) {
 				$model = Mage::getModel('webqemmailcall/timeslot');
 				$model->setNumberDay($timeslotDay);
 				$model->setDescription($segment['description']);
 				$model->setTimeStart($segment['from_time']);
 				$model->setTimeEnd($segment['to_time']);
+				if (is_numeric($id)) {
+					$model->setId($id);
+				}
 				$model->save();
 			}
-			
+			foreach ($deleteids as $deleteId) {
+				$model = Mage::getModel('webqemmailcall/timeslot');
+					
+				$model->setId($deleteId)
+					->delete();
+			}
 			
 			try {
 				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('webqemmailcall')->__('Timeslot was successfully saved'));
@@ -83,17 +102,24 @@ class Webqem_Mailcall_Adminhtml_TimeslotController extends Mage_Adminhtml_Contro
                 return;
             }
         }
-        Mage::getSingleton('adminhtml/session')->addError(Mage::helper('gift')->__('Unable to find item to save'));
+        Mage::getSingleton('adminhtml/session')->addError(Mage::helper('webqemmailcall')->__('Unable to find item to save'));
         $this->_redirect('*/*/');
 	}
  
 	public function deleteAction() {
-		if( $this->getRequest()->getParam('id') > 0 ) {
+		if( $data = $this->getRequest()->getParams() ) {
 			try {
-				$model = Mage::getModel('webqemmailcall/timeslot');
-				 
-				$model->setId($this->getRequest()->getParam('id'))
-					->delete();
+				$model = Mage::getModel('webqemmailcall/timeslot')->load($data['id']);
+				
+				$collectionTimeslot = Mage::getModel('webqemmailcall/timeslot')->getCollection();
+				$collectionTimeslot->getSelect()->where('number_day = '.$model->getNumberDay());
+				
+				foreach ($collectionTimeslot as $timeslot) {
+					$model = Mage::getModel('webqemmailcall/timeslot');
+				
+					$model->setId($timeslot->getId())
+							->delete();
+				}
 					 
 				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('Timeslot was successfully deleted'));
 				$this->_redirect('*/*/');
@@ -106,14 +132,24 @@ class Webqem_Mailcall_Adminhtml_TimeslotController extends Mage_Adminhtml_Contro
 	}
 
     public function massDeleteAction() {
-        $giftIds = $this->getRequest()->getParam('gift');
+        $giftIds = $this->getRequest()->getParam('timeslot');
+        
         if(!is_array($giftIds)) {
 			Mage::getSingleton('adminhtml/session')->addError(Mage::helper('adminhtml')->__('Please select item(s)'));
         } else {
             try {
                 foreach ($giftIds as $giftId) {
-                    $gift = Mage::getModel('gift/gift')->load($giftId);
-                    $gift->delete();
+	                $model = Mage::getModel('webqemmailcall/timeslot')->load($giftId);
+					
+					$collectionTimeslot = Mage::getModel('webqemmailcall/timeslot')->getCollection();
+					$collectionTimeslot->getSelect()->where('number_day = '.$model->getNumberDay());
+					
+					foreach ($collectionTimeslot as $timeslot) {
+						$model = Mage::getModel('webqemmailcall/timeslot');
+					
+						$model->setId($timeslot->getId())
+								->delete();
+					}
                 }
                 Mage::getSingleton('adminhtml/session')->addSuccess(
                     Mage::helper('adminhtml')->__(
@@ -151,24 +187,6 @@ class Webqem_Mailcall_Adminhtml_TimeslotController extends Mage_Adminhtml_Contro
         $this->_redirect('*/*/index');
     }
   
-    public function exportCsvAction()
-    {
-        $fileName   = 'gift.csv';
-        $content    = $this->getLayout()->createBlock('gift/adminhtml_gift_grid')
-            ->getCsv();
-
-        $this->_sendUploadResponse($fileName, $content);
-    }
-
-    public function exportXmlAction()
-    {
-        $fileName   = 'gift.xml';
-        $content    = $this->getLayout()->createBlock('gift/adminhtml_gift_grid')
-            ->getXml();
-
-        $this->_sendUploadResponse($fileName, $content);
-    }
-
     protected function _sendUploadResponse($fileName, $content, $contentType='application/octet-stream')
     {
         $response = $this->getResponse();

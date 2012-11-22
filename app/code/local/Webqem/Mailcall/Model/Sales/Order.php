@@ -6,8 +6,10 @@ class Webqem_Mailcall_Model_Sales_Order extends Mage_Sales_Model_Order{
 		if($pickupObject){
 			$timeslotId = $pickupObject->getTimeslot();
 			
-			$desc .= ' - '.$pickupObject->getTimeslot();
-			$desc .= ' - Name: '.$pickupObject->getOrderId();
+			$timeslot = Mage::getModel('webqemmailcall/timeslot')->load($timeslotId);
+			
+			$desc .= ' - Delivery: '.$timeslot->getDescription().' ' . $timeslot->getTimeStart() . ' to ' . $timeslot->getTimeEnd().'( '.$pickupObject->getTimeslotDate().' )';
+			
 			
 		}
 		return $desc;

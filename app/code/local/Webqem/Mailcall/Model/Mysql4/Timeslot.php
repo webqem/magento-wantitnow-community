@@ -6,4 +6,5 @@ class Webqem_Mailcall_Model_Mysql4_Timeslot extends Mage_Core_Model_Mysql4_Abstr
     {
         $this->_init('webqemmailcall/timeslot', 'timeslot_id');
     }
+    
 }

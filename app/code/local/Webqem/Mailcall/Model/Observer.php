@@ -17,14 +17,13 @@ class Webqem_Mailcall_Model_Observer
         
         if($shippingMethod=='webqemmailcall_webqemmailcall'){
             $this->getCheckout()->setStepData('shipping_method','use_mailcall',1);
-	   $this->getCheckout()->setStepData('shipping_method','mailcall_payment',Mage::getStoreConfig('carriers/webqemmailcall/payment'));
+	   		$this->getCheckout()->setStepData('shipping_method','mailcall_payment',Mage::getStoreConfig('carriers/webqemmailcall/payment'));
         }else{
             $this->getCheckout()->setStepData('shipping_method','use_mailcall',0);
             $this->getCheckout()->setStepData('shipping_method','mailcall_payment','');
         }
 	
     }
-    
     public function saveOrderAfter($evt){
     	$order = $evt->getOrder();
     	$pickup = Mage::getSingleton('checkout/session')->getPickup();

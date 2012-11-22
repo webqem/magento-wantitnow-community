@@ -35,6 +35,15 @@ $installer->run("
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ");
+$installer->run("
+		CREATE TABLE IF NOT EXISTS {$this->getTable('webqem_holidays')} (
+		`id` int(11) unsigned NOT NULL auto_increment,
+		`holidays_date` varchar(255) NOT NULL default '',
+		`holidays_state` varchar(255) NOT NULL default '',
+		`holidays_status` smallint(6) NOT NULL default '0',
+		PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+");
 $attributeId = $installer->getAttributeId('catalog_product', 'wantitnow');
 if(!$attributeId && false){
     $defaultValue = '1';

@@ -36,13 +36,16 @@ class Webqem_Mailcall_Block_Adminhtml_Timeslot_Edit_Tab_Form extends Mage_Core_B
 	 	}
 	 	return $_hours;
 	 }
-	 public function getOptionHour()
+	 public function getOptionHour($selected = null)
 	 {
 	 	$html = '';
 	 	foreach ($this->getHours() as $key=>$value) {
-	 		$html .= '<option value="'.$key.'">'.$value.'</option>';
+	 		if ($selected==$key) {
+	 			$html .= '<option value="'.$key.'" selected="selected">'.$value.'</option>';
+	 		} else {
+	 			$html .= '<option value="'.$key.'">'.$value.'</option>';
+	 		}
 	 	}
-	 	 
 	 	
 	 	return $html;
 	 }
@@ -51,10 +54,18 @@ class Webqem_Mailcall_Block_Adminhtml_Timeslot_Edit_Tab_Form extends Mage_Core_B
 	 	$arrData = Mage::getModel('webqemmailcall/timeslot_listdate')->getOptionArray();
 	 	$html = "<select name='timeslot_day' class='timeslot_day'>";
 	 	foreach ($arrData as $k=>$v) {
-	 		$html .= "<option value='$k'>$v</option>";
+	 		if (Mage::registry('timeslot_data')->getNumberDay() == $k) {
+	 			$html .= "<option value='$k' selected='selected'>$v</option>";
+	 		} else {
+	 			$html .= "<option value='$k'>$v</option>";
+	 		}
 	 	}
 	 	
 	 	$html .= "</select>";
 	 	return $html;
+	 }
+	 public function getDataEdit()
+	 {
+	 	return Mage::registry('timeslot_edit_data');
 	 }
 }

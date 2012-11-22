@@ -14,39 +14,28 @@ class Webqem_Mailcall_Block_Adminhtml_Timeslot_Grid extends Mage_Adminhtml_Block
   protected function _prepareCollection()
   {
       $collection = Mage::getModel('webqemmailcall/timeslot')->getCollection();
+      $collection->getSelect()->columns('COUNT(description) AS quality')
+      							->group('number_day');
+      
       $this->setCollection($collection);
       return parent::_prepareCollection();
   }
 
   protected function _prepareColumns()
   {
-      $this->addColumn('fbcp_id', array(
-          'header'    => Mage::helper('webqemmailcall')->__('ID'),
-          'align'     =>'right',
-          'width'     => '50px',
-          'index'     => 'timeslot_id',
-      ));
+      
       $this->addColumn('number_day', array(
       		'header'    => Mage::helper('webqemmailcall')->__('Day'),
       		'align'     =>'left',
       		'index'     => 'number_day',
+      		'renderer'	=> 'Webqem_Mailcall_Block_Adminhtml_Timeslot_Renderer_Day'
       ));
-      $this->addColumn('description', array(
-          'header'    => Mage::helper('webqemmailcall')->__('Description'),
+      $this->addColumn('quality', array(
+          'header'    => Mage::helper('webqemmailcall')->__('Number Timeslot'),
           'align'     =>'left',
-          'index'     => 'description',
+          'index'     => 'quality',
       ));
-      $this->addColumn('time_start', array(
-      		'header'    => Mage::helper('webqemmailcall')->__('Time start'),
-      		'align'     =>'left',
-      		'index'     => 'time_start',
-      ));
-      $this->addColumn('time_end', array(
-      		'header'    => Mage::helper('webqemmailcall')->__('End time'),
-      		'align'     =>'left',
-      		'index'     => 'time_end',
-      ));
-	
+     
 	  
         $this->addColumn('action',
             array(
@@ -78,8 +67,8 @@ class Webqem_Mailcall_Block_Adminhtml_Timeslot_Grid extends Mage_Adminhtml_Block
 
     protected function _prepareMassaction()
     {
-        $this->setMassactionIdField('fbcp_id');
-        $this->getMassactionBlock()->setFormFieldName('fbcp');
+        $this->setMassactionIdField('timeslot_id');
+        $this->getMassactionBlock()->setFormFieldName('timeslot');
 
         $this->getMassactionBlock()->addItem('delete', array(
              'label'    => Mage::helper('webqemmailcall')->__('Delete'),

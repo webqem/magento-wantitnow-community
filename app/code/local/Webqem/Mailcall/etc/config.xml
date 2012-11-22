@@ -119,9 +119,40 @@
                     <pickup>
                         <table>webqem_shipping_pickup</table>
                     </pickup>
+                    <holidays>
+                        <table>webqem_holidays</table>
+                    </holidays>
                 </entities>
             </webqemmailcall_mysql4>
         </models>
+        <!-- <models>
+        	 <sales>
+                <rewrite>
+                    <order>Webqem_Mailcall_Model_Sales_Order</order>
+                </rewrite>
+            </sales>
+            <webqemmailcall>
+                <class>Webqem_Mailcall_Model</class>
+                <resourceModel>webqemmailcall_resource</resourceModel>
+            </webqemmailcall>
+			<salesrule>
+				<rewrite>
+					<validator>Webqem_Mailcall_Model_SalesRule_Validator</validator>
+				</rewrite>
+			</salesrule>
+            <webqemmailcall_resource>
+                <class>Webqem_Mailcall_Model_Resource</class>
+                <deprecatedNode>webqemmailcall_mysql4</deprecatedNode>
+                <entities>
+                    <timeslot>
+                        <table>webqem_timeslot</table>
+                    </timeslot>
+                    <pickup>
+                        <table>webqem_shipping_pickup</table>
+                    </pickup>
+                </entities>
+            </webqemmailcall_resource>
+        </models> -->
         <resources>
             <webqemmailcall_setup>
                 <setup>

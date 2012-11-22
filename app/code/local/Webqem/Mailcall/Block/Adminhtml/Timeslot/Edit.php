@@ -36,8 +36,8 @@ class Webqem_Mailcall_Block_Adminhtml_Timeslot_Edit extends Mage_Adminhtml_Block
 
     public function getHeaderText()
     {
-        if( Mage::registry('fbcp_data') && Mage::registry('fbcp_data')->getId() ) {
-            return Mage::helper('webqemmailcall')->__("Edit Timeslot '%s'", $this->htmlEscape(Mage::registry('fbcp_data')->getTitle()));
+        if( Mage::registry('timeslot_data') && Mage::registry('timeslot_data')->getId() ) {
+            return Mage::helper('webqemmailcall')->__("Edit Timeslot");
         } else {
             return Mage::helper('webqemmailcall')->__('Add Timeslot');
         }
