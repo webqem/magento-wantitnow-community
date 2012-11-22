@@ -1,0 +1,154 @@
+<?php 
+/**
+ * Timeslot template
+ */
+?>
+<style type="text/css">
+	.timeslot_day{
+		width:200px;
+	}
+	.dynamic-grid_segment td{
+		padding:5px 0;
+	}
+</style>
+<script type="text/javascript">
+	String.prototype.str_replace = function(search, replace) {
+	
+	    return this.split(search).join(replace);
+	
+	}
+	var coutNumberTimeslot = <?php if($this->getDataEdit()) echo count($this->getDataEdit()); else echo 0;?>;
+	function removeSegment(numberSegment, idRemove) {
+		if (!isNaN(idRemove)) {
+			var deleteIds = $('delete_ids').getValue() +','+idRemove;
+			$('delete_ids').setValue(deleteIds);
+			
+		}
+		Element.remove("segment_"+numberSegment);
+		coutNumberTimeslot--;
+	}
+	function changeTimeStart(id) {
+		var timestart = $('time_start_'+id).getValue();
+		timestart = parseFloat(timestart.str_replace(':', '.'));
+		if (id-1>0) {
+			var timesend = $('time_end_'+(id-1)).getValue();
+			timesend = parseFloat(timesend.str_replace(':', '.'));
+
+			if (timestart<timesend) {
+				alert('Timeslots cannot overlap');
+				return false;
+			}
+		}
+	}
+	function changeTimeEnd(id) {
+		var timestart = $('time_start_'+id).getValue();
+		timestart = parseFloat(timestart.str_replace(':', '.'));
+
+		var timeend = $('time_end_'+id).getValue();
+		timeend = parseFloat(timeend.str_replace(':', '.'));
+
+		if (timestart+3>timeend) {
+			alert('Timeslot period length should be Minimum 3 hours');
+			return false;
+		}
+		if (timeend-timestart>6) {
+			alert('Timeslot period length should be Maximum 6 hours');
+			return false;
+		}
+	}
+	function addNewTimeslotSegment() {
+		var firstStepTemplate = '<tr id="segment_'+coutNumberTimeslot+'">'+
+				    '<td><input type="text" class="required-entry input-text" id="segment_description_'+coutNumberTimeslot+'" name="segment[segment_'+coutNumberTimeslot+'][description]" value=""></td>'+
+				    '<td><select name="segment[segment_'+coutNumberTimeslot+'][from_time]" class="timeslot_hour" id="time_start_'+coutNumberTimeslot+'" onchange="changeTimeStart('+coutNumberTimeslot+')"><?php echo $this->getOptionHour()?></select></td>'+
+				    '<td class="opt-req"><select name="segment[segment_'+coutNumberTimeslot+'][to_time]" class="timeslot_hour" id="time_end_'+coutNumberTimeslot+'" onchange="changeTimeEnd('+coutNumberTimeslot+')"><?php echo $this->getOptionHour()?></select></td>'+
+				    '<td>'+
+				    '<button title="Delete" type="button" class="scalable delete delete-option" onclick="removeSegment('+coutNumberTimeslot+')">'+
+				    '<span>'+
+				    '<span> '+
+				    '<span>  Delete </span>'+
+				    '</span> '+
+				    '</span>'+
+				    '</button>'+
+				    '</td>'+
+					'</tr>';	
+		coutNumberTimeslot++;
+		if (coutNumberTimeslot>4) {
+			coutNumberTimeslot--;
+			alert('Maximum timeslots per day: 4');
+			return;
+		}
+		$('timeslot_header').insert({after:firstStepTemplate});
+		
+	}
+	//< ![CDATA[
+	  var frmTimeslot= new VarienForm('edit_form', true);
+	//]]>
+</script>
+<input type="hidden" value="" name="delete_ids" id="delete_ids" />
+
+<div class="entry-edit">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->getTabTitle()?></h4>
+    </div>
+    <div id="group_timeslot" class="box">
+    	<div class="hor-scroll">
+    		<table class="dynamic-grid" cellspacing="0" cellpadding="0">
+    			<tbody>
+    				<tr>
+    					<td width="100"><?php echo $this->__('Day')?></td>
+    					<td width="200"><?php echo $this->getOptionday()?></td>
+    				</tr>
+    			</tbody>
+    		</table>
+    		
+    	</div>
+    </div>
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Timeslot Segment')?></h4>
+    </div>
+    <div id="group_timeslot" class="box">
+    	<div class="hor-scroll">
+    		
+    		<table class="dynamic-grid_segment" cellspacing="0" cellpadding="0">
+    			<tr id="timeslot_header">
+    				<th width="200px">Description</th>
+					<th width="100px">From time</th>
+					<th width="100px">To time</th>
+					<th>
+    					<button type="button" class="scalable add" id="add_new_timeslot_segment" onclick="addNewTimeslotSegment()"> 
+				   			<span>
+				   				<span>
+				   					<span>Add Segment Time</span>
+				   				</span>
+				   			</span>
+				   		</button>
+    				</th>
+    			</tr>
+    			<?php $count = 1; if(count($this->getDataEdit())>0) : ?>
+    				<?php foreach ($this->getDataEdit() as $segement) : ?>
+    					  <tr id="segment_<?php echo $count;?>">
+						    	<td>
+						    		<input type="text" class="required-entry input-text" id="segment_description_<?php echo $count;?>" name="segment[<?php echo $segement->getId()?>][description]" value="<?php echo $segement->getDescription()?>">
+						    	</td>
+						    	<td>
+						    		<select name="segment[<?php echo $segement->getId()?>][from_time]" class="timeslot_hour" id="time_start_<?php echo $count;?>" onchange="changeTimeStart(<?php echo $count;?>)"><?php echo $this->getOptionHour($segement->getTimeStart())?></select>
+						    	</td>
+						    	<td class="opt-req">
+						    		<select name="segment[<?php echo $segement->getId()?>][to_time]" class="timeslot_hour" id="time_end_<?php echo $count;?>" onchange="changeTimeEnd(<?php echo $count;?>)"><?php echo $this->getOptionHour($segement->getTimeEnd())?></select>
+						    	</td>
+						    	<td>
+							    	<button title="Delete" type="button" class="scalable delete delete-option" onclick="removeSegment(<?php echo $count;?>, <?php echo $segement->getId()?>)">
+									    <span>
+										    <span>
+										    	<span>Delete</span>
+										    </span>
+									    </span>
+								    </button>
+						    	</td>
+							</tr>
+    				<?php $count++; endforeach;?>
+    			<?php endif;?>
+    		</table>
+    	</div>
+    </div>
+</div>
