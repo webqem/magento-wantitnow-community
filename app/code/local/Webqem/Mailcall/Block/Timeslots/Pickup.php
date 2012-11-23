@@ -10,7 +10,7 @@ class Webqem_Mailcall_Block_Timeslots_Pickup extends Mage_Checkout_Block_Onepage
 		$path = 'carriers/timeslot/'.$field;
 		return Mage::getStoreConfig($path, $this->getStore());
 	}
-	public function getDisableDate()
+	public function getDisableDate($encode = false)
 	{
 		$quote = Mage::getSingleton('checkout/session')->getQuote();
 		$billingAddress = $quote->getBillingAddress();
@@ -26,6 +26,8 @@ class Webqem_Mailcall_Block_Timeslots_Pickup extends Mage_Checkout_Block_Onepage
 			$arrHolidays[] = date('m/d/Y', strtotime($holiday->getHolidaysDate()));
 			
 		}
+		if ($encode)
+			return $arrHolidays;
 		return json_encode($arrHolidays);
 	}
 }

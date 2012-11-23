@@ -13,25 +13,6 @@ class Webqem_Mailcall_Block_Adminhtml_Timeslot_Edit extends Mage_Adminhtml_Block
         $this->_updateButton('save', 'label', Mage::helper('webqemmailcall')->__('Save Timeslot'));
         $this->_updateButton('delete', 'label', Mage::helper('webqemmailcall')->__('Delete Timeslot'));
 		
-        $this->_addButton('saveandcontinue', array(
-            'label'     => Mage::helper('adminhtml')->__('Save And Continue Edit'),
-            'onclick'   => 'saveAndContinueEdit()',
-            'class'     => 'save',
-        ), -100);
-
-        $this->_formScripts[] = "
-            function toggleEditor() {
-                if (tinyMCE.getInstanceById('fbcp_content') == null) {
-                    tinyMCE.execCommand('mceAddControl', false, 'fbcp_content');
-                } else {
-                    tinyMCE.execCommand('mceRemoveControl', false, 'fbcp_content');
-                }
-            }
-
-            function saveAndContinueEdit(){
-                editForm.submit($('edit_form').action+'back/edit/');
-            }
-        ";
     }
 
     public function getHeaderText()
