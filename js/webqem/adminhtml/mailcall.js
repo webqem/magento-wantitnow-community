@@ -69,7 +69,7 @@ jQuery(function(){
     changeFixedFields();
     
     //timeslots use fixed cost
-    var usefixedcostTimeSlots=jQuery('#carriers_webqemmailcall_timeslot_usefixedcost');
+    var usefixedcostTimeSlots=jQuery('#carriers_timeslot_usefixedcost');
     usefixedcostTimeSlots.change(function(){
     	changeFixedFieldsTimeslots();
     });
@@ -77,14 +77,14 @@ jQuery(function(){
         var selectedVal=usefixedcostTimeSlots.find("option:selected").val();
         var selectedDisabled=usefixedcostTimeSlots.attr('disabled');
         if(selectedVal==0){
-            jQuery('#carriers_webqemmailcall_timeslot_withinkms').attr('disabled',true);
-            jQuery('#carriers_webqemmailcall_timeslot_fixedcost').attr('disabled',true);
-            jQuery('#carriers_webqemmailcall_timeslot_display_wantitnow').attr('disabled',true);
+            jQuery('#carriers_timeslot_withinkms').attr('disabled',true);
+            jQuery('#carriers_timeslot_fixedcost').attr('disabled',true);
+            jQuery('#carriers_timeslot_display_wantitnow').attr('disabled',true);
         }else{
             if(!selectedDisabled){
-                jQuery('#carriers_webqemmailcall_timeslot_withinkms').attr('disabled',false);
-                jQuery('#carriers_webqemmailcall_timeslot_fixedcost').attr('disabled',false);
-                jQuery('#carriers_webqemmailcall_timeslot_display_wantitnow').attr('disabled',false);
+                jQuery('#carriers_timeslot_withinkms').attr('disabled',false);
+                jQuery('#carriers_timeslot_fixedcost').attr('disabled',false);
+                jQuery('#carriers_timeslot_display_wantitnow').attr('disabled',false);
             }
             
         }

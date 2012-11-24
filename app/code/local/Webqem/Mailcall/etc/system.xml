@@ -4,7 +4,7 @@
         <carriers>
             <groups>
                 <webqemmailcall translate="label" module="shipping">
-                    <label>Want It Now</label>
+                    <label>WantItNow</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>15</sort_order>
                     <show_in_default>1</show_in_default>

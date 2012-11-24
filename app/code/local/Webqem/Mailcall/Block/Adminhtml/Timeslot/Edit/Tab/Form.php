@@ -49,9 +49,36 @@ class Webqem_Mailcall_Block_Adminhtml_Timeslot_Edit_Tab_Form extends Mage_Core_B
 	 	
 	 	return $html;
 	 }
+	 public function getNumberDayExisted()
+	 {
+	 	$arrNumber = array();
+	 	$numberDay = Mage::registry('timeslot_data')->getNumberDay();
+	 	
+	 	$collection = Mage::getModel('webqemmailcall/timeslot')->getCollection();	 
+	 	$collection->getSelect()->group('number_day');
+	 	
+	 	foreach ($collection as $timeslot) {
+	 		if ($numberDay == $timeslot->getNumberDay()) {
+	 			continue;
+	 		}
+	 		$arrNumber[] = $timeslot->getNumberDay();
+	 	}
+	 	
+	 	return $arrNumber;
+	 }
 	 public function getOptionday()
 	 {
 	 	$arrData = Mage::getModel('webqemmailcall/timeslot_listdate')->getOptionArray();
+	 	 	
+	 	$arrNumberDayExisted = $this->getNumberDayExisted();
+	 	if (count($arrNumberDayExisted)>0) {
+	 		foreach ($arrData as $k=>$v) {
+	 			if (in_array($k, $arrNumberDayExisted)) {
+	 				unset($arrData[$k]);
+	 			}
+	 		}
+	 	
+	 	}
 	 	$html = "<select name='timeslot_day' class='timeslot_day'>";
 	 	foreach ($arrData as $k=>$v) {
 	 		if (Mage::registry('timeslot_data')->getNumberDay() == $k) {
