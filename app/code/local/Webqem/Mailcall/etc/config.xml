@@ -49,7 +49,7 @@
     <adminhtml>
        <menu>
             <webqemall>
-            	<title>Webqem</title>
+            	<title>webqem</title>
 				<sort_order>71</sort_order>     
                 <children>
                     <mailcall translate="title" module="webqemmailcall">
