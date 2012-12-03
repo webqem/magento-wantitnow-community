@@ -49,7 +49,7 @@
     <adminhtml>
        <menu>
             <webqemall>
-            	<title>webqem</title>
+            	<title>Webqem</title>
 				<sort_order>71</sort_order>     
                 <children>
                     <mailcall translate="title" module="webqemmailcall">
@@ -122,6 +122,9 @@
                     <holidays>
                         <table>webqem_holidays</table>
                     </holidays>
+                    <request>
+                        <table>webqem_request</table>
+                    </request>
                 </entities>
             </webqemmailcall_mysql4>
         </models>
