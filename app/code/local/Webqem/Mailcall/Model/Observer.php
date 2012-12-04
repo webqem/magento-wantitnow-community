@@ -64,7 +64,7 @@ class Webqem_Mailcall_Model_Observer
 	public function saveRequestBook($observer) {
 		$useMailcall=$this->getCheckout()->getStepData('shipping_method','use_mailcall');
 		$order = $observer->getOrder();
-		$orderStatus = $order->getStatus();
+		
 		$strRequest = "";
 		$shippingMethod = $order->getShippingMethod();
 		
@@ -89,7 +89,7 @@ class Webqem_Mailcall_Model_Observer
 								->getbookXmlRequest($quote);
 			 
 		}
-		$data['order_id'] 		 	= $order->getData('increment_id');
+		$data['order_id'] 		 = $order->getData('increment_id');
 		$data['shipping_method'] = $shippingMethod;
 		$data['request']  		 = $strRequest;
 		
@@ -105,9 +105,7 @@ class Webqem_Mailcall_Model_Observer
         	$orderId = $order->getId();
         }
         $orderStatus = Mage::getModel('sales/order')->loadByIncrementId($order->getIncrementId())
-			        		//->getCollection()
-			        		//->getFirstItem()
-			        		->getStatus();
+			        								->getStatus();
         if (!$orderStatus) {
         	$orderStatus = Mage::getModel('sales/order')->load($orderId)
 			        		->getCollection()
@@ -129,7 +127,13 @@ class Webqem_Mailcall_Model_Observer
 	        }
 	       
         }
-       
+        $requestModel = Mage::getModel('webqemmailcall/request')->getCollection()
+					        ->addFieldToFilter('order_id', $order->getIncrementId())
+					        ->addFieldToFilter('status', 0)
+					        ->getFirstItem();
+        $model = Mage::getModel('webqemmailcall/request')->load($requestModel->getId());
+        $model->setData('status', 1);
+        $model->save();
         return;
     }
 	
