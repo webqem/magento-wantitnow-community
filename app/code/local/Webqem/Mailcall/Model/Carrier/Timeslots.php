@@ -346,7 +346,7 @@ class Webqem_Mailcall_Model_Carrier_Timeslots extends Mage_Shipping_Model_Carrie
 	/*
      * send new order email notice
      */
-    protected function sendNewOrderNoticeEmail(){
+    protected function sendNewOrderNoticeEmail($wintracklink,$linenumber){
   
         $order=$this->getOrder();
         $orderId=$order->getData('increment_id');
@@ -359,6 +359,8 @@ class Webqem_Mailcall_Model_Carrier_Timeslots extends Mage_Shipping_Model_Carrie
 
             $subject='Want it Now Priority Order #'.$orderId;
             $body='Priority Order Notification<br />Order '.$orderId.' is using Want it as the shipping method. Please attend to this order.';
+            //added extra line by Mike @ Mailcall 05/12/2012
+            $body.='<br /><br />The WantItNow line number for this job is:<strong> ' . $linenumber . '</strong>.';
             $body.='<br /><br />Regards<br /><br />'.$storeName;
             
             foreach($emailArr as $toemail){
@@ -720,7 +722,8 @@ class Webqem_Mailcall_Model_Carrier_Timeslots extends Mage_Shipping_Model_Carrie
         
         $getQuote = $xml->addChild('job');
         $requestor = $getQuote;
-        $requestor->addChild('date', date('Ymd',strtotime($pickup['timeslot_date'])));        
+        //reformatted the timestamp ti pick up the friendly date from the calendar - Mike@mailcall 05/12/2012
+        $requestor->addChild('date', date('Ydm',strtotime($pickup['timeslot_date'])));        
         $requestor->addChild('fromcompany', $this->getConfigData('fromcompany'));
         $requestor->addChild('fromaddress1', $homeaddress);//$this->getConfigData('fromaddress')
         $requestor->addChild('fromcontact', $this->getConfigData('fromcontact'));
@@ -786,9 +789,10 @@ class Webqem_Mailcall_Model_Carrier_Timeslots extends Mage_Shipping_Model_Carrie
     	 
     }
     
-    public function bookXmlRequest($order) {
+    //Included the ORDER ID in the pass through - Mike @ Mailcall 05/12/2012
+        public function bookXmlRequest($order, $orderId) {
     	$requestModel = Mage::getModel('webqemmailcall/request')->getCollection()
-    						->addFieldToFilter('order_id', $order->getIncrementId())
+    						->addFieldToFilter('order_id', $orderId)
     						->addFieldToFilter('status', 0)
     						->getFirstItem();
     	if ($requestModel) {
@@ -806,7 +810,8 @@ class Webqem_Mailcall_Model_Carrier_Timeslots extends Mage_Shipping_Model_Carrie
 	                $responseBody=$this->_submitPost($request);
 	                if(!empty($responseBody)) break;
 	            }
-	            Mage::log($requestor);
+	            //commented out by mike@mailcall 05/12/2012
+                    //Mage::log($requestor);
 	            Mage::log($responseBody);
 	            //$i=5;$responseBody="";
 	            //contact api error
@@ -932,7 +937,7 @@ class Webqem_Mailcall_Model_Carrier_Timeslots extends Mage_Shipping_Model_Carrie
             //Modified by Mike @ Mailcall 01/06/2012
             $this->sendNewOrderEmailToCustomer($privatelink,$wintracklink,$linenumber,$mobileauthcode);
             //$this->sendNewOrderEmailToCustomer($privatelink);
-            $this->sendNewOrderNoticeEmail();
+            $this->sendNewOrderNoticeEmail($wintracklink,$linenumber);
         }
 
         return $this;
