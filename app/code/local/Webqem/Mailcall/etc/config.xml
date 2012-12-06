@@ -221,7 +221,7 @@
                     </webqemmailcall_observer>
                 </observers>
             </checkout_type_onepage_save_order>
-            <!--Commented Our By Mike @ Mailcall 05/12/2012
+            <!--Commented Out By Mike @ Mailcall 05/12/2012
             <sales_order_save_after>
                 <observers>
                     <webqemmailcall_observer_request>
